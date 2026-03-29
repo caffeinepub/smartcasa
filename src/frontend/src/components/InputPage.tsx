@@ -41,7 +41,6 @@ const AMENITY_OPTIONS: {
   { key: "duplex", label: "Duplex", emoji: "🏛️" },
   { key: "terraceRequired", label: "Terrace", emoji: "☀️" },
   { key: "internalStaircase", label: "Internal Staircase", emoji: "🪜" },
-  { key: "externalStaircase", label: "External Staircase", emoji: "🚪" },
   { key: "hall", label: "Hall", emoji: "🏠" },
 ];
 
@@ -321,30 +320,6 @@ export function InputPage({ onGenerate }: Props) {
               Smart<span style={{ color: "oklch(0.78 0.12 55)" }}>Casa</span>
             </span>
           </div>
-          <nav className="hidden md:flex items-center gap-8">
-            {["Product", "Features", "Community", "Blog"].map((item) => (
-              <button
-                key={item}
-                type="button"
-                className="text-sm font-medium transition-colors bg-transparent border-none cursor-pointer"
-                style={{ color: "oklch(0.75 0.02 240)" }}
-              >
-                {item}
-              </button>
-            ))}
-          </nav>
-          <button
-            type="button"
-            className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all"
-            style={{
-              border: "1px solid oklch(0.55 0.11 186)",
-              color: "oklch(0.55 0.11 186)",
-              background: "transparent",
-            }}
-            data-ocid="nav.login.button"
-          >
-            Login / Sign Up
-          </button>
         </div>
       </header>
 

@@ -4,14 +4,14 @@ import type { Layout } from "../types/house";
 // Architectural colour palette
 // ──────────────────────────────────────────────────
 const ROOM_FILL: Record<string, string> = {
-  bedroom: "#e8eef6",
-  kitchen: "#fef6e4",
-  hall: "#eaf6ec",
-  bathroom: "#f4edf8",
-  study: "#fdf3e7",
-  dining: "#fdf8e4",
-  parking: "#eaeef2",
-  garden: "#e4f6e4",
+  bedroom: "#BBDEFB",
+  kitchen: "#FFF9C4",
+  hall: "#C8E6C9",
+  bathroom: "#E1BEE7",
+  study: "#B2EBF2",
+  dining: "#FFE0B2",
+  parking: "#CFD8DC",
+  garden: "#A5D6A7",
   terrace: "#fdf0e4",
 };
 
@@ -829,77 +829,6 @@ export function FloorPlan2D({
                       fill="#2040a0"
                     >
                       STAIR
-                    </text>
-                  )}
-                </g>
-              );
-            })()}
-
-          {/* ── External staircase ── */}
-          {layout.externalStaircase &&
-            (() => {
-              const es = layout.externalStaircase;
-              const esW = es.widthFraction * drawW;
-              const esH = es.depthFraction * bH;
-              const esY = bY + es.posZFraction * bH;
-              const esX = es.side === "left" ? pad : bX + bW;
-              const stepCount = 7;
-              return (
-                <g>
-                  <rect
-                    x={esX}
-                    y={esY}
-                    width={esW}
-                    height={esH}
-                    fill={`url(#${extStairPatternId})`}
-                    stroke="#2040a0"
-                    strokeWidth="1.2"
-                    rx="1"
-                  />
-                  {Array.from({ length: stepCount }).map((_, i) => {
-                    const yLine = esY + esH - (esH / (stepCount + 1)) * (i + 1);
-                    return (
-                      <line
-                        key={yLine}
-                        x1={esX + 2}
-                        y1={yLine}
-                        x2={esX + esW - 2}
-                        y2={yLine}
-                        stroke="#2040a0"
-                        strokeWidth="0.7"
-                        opacity="0.55"
-                      />
-                    );
-                  })}
-                  {/* Connection to terrace */}
-                  <line
-                    x1={esX}
-                    y1={esY}
-                    x2={esX + esW}
-                    y2={esY}
-                    stroke="#2040a0"
-                    strokeWidth="2.5"
-                  />
-                  <text
-                    x={esX + esW / 2}
-                    y={esY - 3}
-                    textAnchor="middle"
-                    fontSize="5.5"
-                    fill="#2040a0"
-                    fontWeight="700"
-                  >
-                    TERRACE
-                  </text>
-                  {esW > 16 && esH > 14 && (
-                    <text
-                      x={esX + esW / 2}
-                      y={esY + esH / 2 + 4}
-                      textAnchor="middle"
-                      fontSize="6.5"
-                      fontWeight="700"
-                      fill="#1030a0"
-                    >
-                      Ext.Stair
                     </text>
                   )}
                 </g>

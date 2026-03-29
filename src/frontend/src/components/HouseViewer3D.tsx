@@ -77,12 +77,36 @@ function RoomMesh({
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: Three.js meshes do not support keyboard events */}
       <mesh onClick={onClick} castShadow receiveShadow>
         <boxGeometry args={[rw, roomH, rd]} />
+        {/* Per-face materials: right(0), left(1), top(2,colored), bottom(3), front(4), back(5) */}
         <meshStandardMaterial
+          attach="material-0"
+          color={isSelected ? "#FFE082" : "#eceff1"}
+          roughness={0.85}
+        />
+        <meshStandardMaterial
+          attach="material-1"
+          color={isSelected ? "#FFE082" : "#eceff1"}
+          roughness={0.85}
+        />
+        <meshStandardMaterial
+          attach="material-2"
           color={isSelected ? "#FFE082" : color}
-          roughness={0.8}
-          metalness={0.05}
-          transparent
-          opacity={isSelected ? 1.0 : 0.92}
+          roughness={0.7}
+        />
+        <meshStandardMaterial
+          attach="material-3"
+          color={isSelected ? "#FFE082" : "#dde2e6"}
+          roughness={0.9}
+        />
+        <meshStandardMaterial
+          attach="material-4"
+          color={isSelected ? "#FFE082" : "#eceff1"}
+          roughness={0.85}
+        />
+        <meshStandardMaterial
+          attach="material-5"
+          color={isSelected ? "#FFE082" : "#eceff1"}
+          roughness={0.85}
         />
       </mesh>
       {showLabel && (
@@ -191,37 +215,37 @@ function RoomWalls({
       <mesh position={[0, 0, rd / 2]}>
         <boxGeometry args={[rw, roomH, wt]} />
         <meshStandardMaterial
-          color="#455a64"
+          color="#2c3e50"
           roughness={0.9}
           transparent
-          opacity={0.6}
+          opacity={0.95}
         />
       </mesh>
       <mesh position={[0, 0, -rd / 2]}>
         <boxGeometry args={[rw, roomH, wt]} />
         <meshStandardMaterial
-          color="#455a64"
+          color="#2c3e50"
           roughness={0.9}
           transparent
-          opacity={0.6}
+          opacity={0.95}
         />
       </mesh>
       <mesh position={[-rw / 2, 0, 0]}>
         <boxGeometry args={[wt, roomH, rd]} />
         <meshStandardMaterial
-          color="#455a64"
+          color="#2c3e50"
           roughness={0.9}
           transparent
-          opacity={0.6}
+          opacity={0.95}
         />
       </mesh>
       <mesh position={[rw / 2, 0, 0]}>
         <boxGeometry args={[wt, roomH, rd]} />
         <meshStandardMaterial
-          color="#455a64"
+          color="#2c3e50"
           roughness={0.9}
           transparent
-          opacity={0.6}
+          opacity={0.95}
         />
       </mesh>
     </group>
@@ -341,51 +365,6 @@ function StaircaseMesh({
       );
     }
   }
-  return <group>{steps}</group>;
-}
-
-function ExternalStaircaseMesh({
-  layout,
-  plotLength,
-  plotBreadth,
-  floorHeight,
-}: {
-  layout: Layout;
-  plotLength: number;
-  plotBreadth: number;
-  floorHeight: number;
-}) {
-  const ext = layout.externalStaircase;
-  const steps: ReactElement[] = [];
-  const numSteps = 8;
-
-  const stairW = ext.widthFraction * plotLength;
-  const stairD = ext.depthFraction * plotBreadth;
-  const stepDepth = stairD / numSteps;
-
-  // Position along Z axis of the building side
-  const posZ = ext.posZFraction * plotBreadth - plotBreadth / 2;
-
-  // X position: outside building footprint on left or right
-  const buildingEdgeX = ext.side === "left" ? -plotLength / 2 : plotLength / 2;
-  const directionX = ext.side === "left" ? -1 : 1;
-
-  for (let s = 0; s < numSteps; s++) {
-    const stepH = ((s + 1) / numSteps) * floorHeight;
-    const stepY = stepH / 2;
-    // Steps extend outward from building edge
-    const stepOffsetX = directionX * ((s + 0.5) / numSteps) * stairD;
-    const cx = buildingEdgeX + stepOffsetX;
-    const cz = posZ;
-
-    steps.push(
-      <mesh key={`ext-step-${s}`} position={[cx, stepY, cz]} castShadow>
-        <boxGeometry args={[stepDepth * 0.9, stepH, stairW * 0.9]} />
-        <meshStandardMaterial color="#6D4C41" roughness={0.7} />
-      </mesh>,
-    );
-  }
-
   return <group>{steps}</group>;
 }
 
@@ -605,7 +584,6 @@ function Scene({
   flyToRoom,
   onRoomClick,
   showInternalStaircase,
-  showExternalStaircase,
 }: {
   layout: Layout;
   plotLength: number;
@@ -618,7 +596,6 @@ function Scene({
   flyToRoom: Room | null;
   onRoomClick?: (room: Room | null) => void;
   showInternalStaircase: boolean;
-  showExternalStaircase: boolean;
 }) {
   const controlsRef = useRef<any>(null);
   const { camera } = useThree();
@@ -783,15 +760,6 @@ function Scene({
         />
       )}
 
-      {showExternalStaircase && (
-        <ExternalStaircaseMesh
-          layout={layout}
-          plotLength={plotLength}
-          plotBreadth={plotBreadth}
-          floorHeight={floorHeight}
-        />
-      )}
-
       {layout.hasTerrace && (
         <TerraceMesh
           numFloors={layout.floorCount}
@@ -833,7 +801,6 @@ export function HouseViewer3D({
   selectedFloor = -1,
   onRoomClick,
   showInternalStaircase = false,
-  showExternalStaircase = false,
 }: Props) {
   const floorHeight = buildingHeight / layout.floorCount;
   const totalHeight = buildingHeight + (layout.hasTerrace ? 1.5 : 0);
@@ -878,7 +845,6 @@ export function HouseViewer3D({
           flyToRoom={flyToRoom}
           onRoomClick={handleRoomClick}
           showInternalStaircase={showInternalStaircase}
-          showExternalStaircase={showExternalStaircase}
         />
       </Suspense>
     </Canvas>
